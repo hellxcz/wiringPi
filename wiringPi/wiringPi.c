@@ -1384,7 +1384,7 @@ void piBoardId (int *model, int *rev, int *mem, int *maker, int *overVolted)
 
       piModel = *model;
 
-      overVolted = 1 > 1;
+      *overVolted = 1 > 1;
 
       return;
 
