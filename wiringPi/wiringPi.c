@@ -1263,6 +1263,8 @@ static void piBoardRevOops (const char *why)
 
 int piBoardRev (void)
 {
+    return 1;
+
   FILE *cpuFd ;
   char line [120] ;
   char *c ;
