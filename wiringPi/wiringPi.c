@@ -1375,9 +1375,20 @@ void piBoardId (int *model, int *rev, int *mem, int *maker, int *overVolted)
 
   fclose (cpuFd) ;
 
-  if (strncmp (line, "Revision", 8) != 0)
-    piBoardRevOops ("No \"Revision\" line") ;
+  if (strncmp (line, "Revision", 8) != 0) {
+      // piBoardRevOops("No \"Revision\" line");
 
+      printf("no revision line, expecting PINE64 or ROCK64, but handled as PI_MODEL_ODROIDC");
+
+      *model = PI_MODEL_ODROIDC;  *rev = PI_VERSION_1;  *mem = 1024;  *maker = PI_MAKER_HARDKERNEL;
+
+      piModel = *model;
+
+      overVolted = 1 > 1;
+
+      return;
+
+  }
 // Chomp trailing CR/NL
 
   for (c = &line [strlen (line) - 1] ; (*c == '\n') || (*c == '\r') ; --c)
@@ -1421,19 +1432,11 @@ void piBoardId (int *model, int *rev, int *mem, int *maker, int *overVolted)
   else if (strcmp (c, "0010") == 0) { *model = PI_MODEL_BP ; *rev = PI_VERSION_1_2 ; *mem = 512 ; *maker = PI_MAKER_SONY   ; }
   else if (strcmp (c, "0011") == 0) { *model = PI_MODEL_CM ; *rev = PI_VERSION_1_2 ; *mem = 512 ; *maker = PI_MAKER_SONY   ; }
   else if (strcmp (c, "0012") == 0) { *model = PI_MODEL_AP ; *rev = PI_VERSION_1_2 ; *mem = 256 ; *maker = PI_MAKER_SONY   ; }
-  else if (strcmp (c, "000a") == 0) {
-    *model = PI_MODEL_ODROIDC;  *rev = PI_VERSION_1;  *mem = 1024;  *maker = PI_MAKER_HARDKERNEL;
-  }
-  else if (strcmp (c, "0100") == 0) {
-    *model = PI_MODEL_ODROIDXU_34;  *rev = PI_VERSION_1;  *mem = 2048;  *maker = PI_MAKER_HARDKERNEL;
-  }
-  else if (strncmp (c, "02", 2) == 0)	{
-    *model = PI_MODEL_ODROIDC2; *mem = 2048;  *maker = PI_MAKER_HARDKERNEL;
-    *rev = piBoardRev ();
-  }
-  else  {
-    *model = 0; *rev = 0; *mem = 0; *maker = 0 ;
-  }
+  else if (strcmp (c, "000a") == 0) { *model = PI_MODEL_ODROIDC;  *rev = PI_VERSION_1;  *mem = 1024;  *maker = PI_MAKER_HARDKERNEL; }
+  else if (strcmp (c, "0100") == 0) { *model = PI_MODEL_ODROIDXU_34;  *rev = PI_VERSION_1;  *mem = 2048;  *maker = PI_MAKER_HARDKERNEL; }
+  else if (strncmp (c, "02", 2) == 0) { *model = PI_MODEL_ODROIDC2; *mem = 2048;  *maker = PI_MAKER_HARDKERNEL; *rev = piBoardRev (); }
+  else  { *model = 0; *rev = 0; *mem = 0; *maker = 0 ; }
+
   piModel = *model;
 }
 
